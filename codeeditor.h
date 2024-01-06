@@ -4,6 +4,11 @@
 #include <QObject>
 #include <QPlainTextEdit>
 
+#include <QSyntaxHighlighter>
+#include <QTextCharFormat>
+
+#include "syntaxhighlighter.h"
+
 class CodeEditor : public QPlainTextEdit
 {
     Q_OBJECT
@@ -13,6 +18,10 @@ public:
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
+
+    void setSyntaxHighlighter(SyntaxHighlighter *highlighter);
+
+
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -27,6 +36,9 @@ public slots:
 
 private:
     QWidget *lineNumberArea;
+    SyntaxHighlighter *syntaxHighlighter;
+
+
 };
 class LineNumberArea : public QWidget
 {

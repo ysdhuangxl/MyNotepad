@@ -110,6 +110,8 @@ void MainWindow::on_actionOpen_triggered()
     textChanged = false;
 }
 
+
+
 void MainWindow::on_actionSave_triggered()
 {
     if (filePath == "") {

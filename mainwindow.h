@@ -76,7 +76,6 @@ private:
 
     QLabel statusCursorLabel;
     QLabel statusLabel;
-
     QString filePath;
     bool textChanged;
 

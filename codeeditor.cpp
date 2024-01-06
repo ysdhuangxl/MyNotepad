@@ -1,17 +1,20 @@
 #include "codeeditor.h"
 #include <QPainter>
 #include <QTextBlock>
-
 CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
 {
     lineNumberArea = new LineNumberArea(this);
 
     connect(this, &CodeEditor::blockCountChanged, this, &CodeEditor::updateLineNumberAreaWidth);
     connect(this, &CodeEditor::updateRequest, this, &CodeEditor::updateLineNumberArea);
-    //    connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
+    connect(this, &CodeEditor::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
 
     updateLineNumberAreaWidth(0);
-    //    highlightCurrentLine();
+
+    highlightCurrentLine();
+
+    syntaxHighlighter = new SyntaxHighlighter(document());
+
 }
 int CodeEditor::lineNumberAreaWidth()
 {
@@ -23,12 +26,12 @@ int CodeEditor::lineNumberAreaWidth()
     }
 
     int space = 3 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * digits;
-
     return space;
 }
+
 void CodeEditor::updateLineNumberAreaWidth(int /* newBlockCount */)
 {
-    //    setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
+        setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
 void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 {
@@ -66,6 +69,11 @@ void CodeEditor::highlightCurrentLine()
 
     setExtraSelections(extraSelections);
 }
+
+
+
+
+
 void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
     QPainter painter(lineNumberArea);
