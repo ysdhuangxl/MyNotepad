@@ -84,14 +84,55 @@ void MainWindow::on_actionNew_triggered()
     textChanged = false;
 }
 
+//void MainWindow::on_actionOpen_triggered()
+//{
+//    if (!userEditConfirmed())
+//        return;
+//    QString filename = QFileDialog::getOpenFileName(this,
+//                                                    "打开文件",
+//                                                    ".",
+//                                                    tr("Text files(*.txt);;All(*.*)"));
+//    QFile file(filename);
+
+//    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+//        QMessageBox::warning(this, "..", "打开文件失败");
+//        return;
+//    }
+//    filePath = filename;
+
+//    QTextStream in(&file);
+//    QString text = in.readAll();
+//    ui->textEdit->insertPlainText(text);
+//    file.close();
+
+//    this->setWindowTitle(QFileInfo(filename).absolutePath());
+
+//    textChanged = false;
+//}
+
+//修改
 void MainWindow::on_actionOpen_triggered()
 {
     if (!userEditConfirmed())
         return;
+
     QString filename = QFileDialog::getOpenFileName(this,
                                                     "打开文件",
                                                     ".",
                                                     tr("Text files(*.txt);;All(*.*)"));
+
+    if (!filename.isEmpty()) {
+        MainWindow *newWindow = new MainWindow;  // 创建新的主窗口实例
+        newWindow->show();  // 显示新窗口
+
+        // 以下是你当前打开文件的逻辑，可以将它提取成一个函数，并在新窗口中调用
+        newWindow->openFile(filename);
+    }
+}
+
+// 新的函数，用于在新窗口中打开文件
+void MainWindow::openFile(const QString &filename)
+{
     QFile file(filename);
 
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
