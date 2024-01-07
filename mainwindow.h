@@ -3,7 +3,6 @@
 
 #include <QLabel>
 #include <QMainWindow>
-//修改
 #include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
@@ -17,8 +16,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    //修改
-    void openFile(const QString &filename);
 
 private slots:
     void on_actionAbout_triggered();
@@ -82,6 +79,8 @@ private:
     QLabel statusLabel;
     QString filePath;
     bool textChanged;
+
+    void openFile(const QString &filename);
 
     bool userEditConfirmed();
 };
