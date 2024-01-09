@@ -9,6 +9,8 @@
 
 #include "syntaxhighlighter.h"
 
+#include <QMouseEvent>
+
 class CodeEditor : public QPlainTextEdit
 {
     Q_OBJECT
@@ -25,6 +27,12 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+
+    void mousePressEvent(QMouseEvent *event) override;
+
+
+signals:
+    void linkActivated(const QUrl &url);
 
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);

@@ -110,3 +110,23 @@ void CodeEditor::showLineNumberArea(bool flag)
         setViewportMargins(0, 0, 0, 0);
     }
 }
+
+void CodeEditor::mousePressEvent(QMouseEvent *event)
+{
+    QTextCursor cursor = cursorForPosition(event->pos());
+
+
+    cursor.movePosition(QTextCursor::StartOfBlock);
+    cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+    QString lineText = cursor.selectedText().trimmed();
+
+
+    QUrl link("http://" + lineText);
+
+
+    emit linkActivated(link);
+    return;
+
+
+    QPlainTextEdit::mousePressEvent(event);
+}

@@ -5,6 +5,9 @@
 #include <QMainWindow>
 #include <QFileDialog>
 
+#include <QDesktopServices>
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -71,6 +74,8 @@ private slots:
     void on_textEdit_cursorPositionChanged();
 
     void on_actionShowLineNumber_triggered(bool checked);
+
+    void openBrowser(const QUrl &url);
 
 private:
     Ui::MainWindow *ui;

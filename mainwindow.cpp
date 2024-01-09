@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
+    connect(ui->textEdit, &CodeEditor::linkActivated, this, &MainWindow::openBrowser);
+
     filePath = "";
 
     statusLabel.setMaximumWidth(200);
@@ -372,4 +374,9 @@ void MainWindow::on_textEdit_cursorPositionChanged()
 void MainWindow::on_actionShowLineNumber_triggered(bool checked)
 {
     ui->textEdit->showLineNumberArea(checked);
+}
+
+void MainWindow::openBrowser(const QUrl &url)
+{
+    QDesktopServices::openUrl(url);
 }
