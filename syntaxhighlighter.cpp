@@ -3,10 +3,8 @@
 SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent)
 {
-    // Define highlighting rules and formats
     HighlightingRule rule;
 
-    // Keyword format
     keywordFormat.setForeground(Qt::blue);
     keywordFormat.setFontWeight(QFont::Bold);
 
@@ -18,24 +16,24 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *parent)
         highlightingRules.append(rule);
     }
 
-    // Single-line comment format
+
     singleLineCommentFormat.setForeground(Qt::green);
     rule.pattern = QRegExp("//[^\n]*");
     rule.format = singleLineCommentFormat;
     highlightingRules.append(rule);
 
-    // Multi-line comment format
+
     multiLineCommentFormat.setForeground(Qt::green);
     commentStartExpression = QRegExp("/\\*");
     commentEndExpression = QRegExp("\\*/");
 
-    // String format
+
     quotationFormat.setForeground(Qt::darkRed);
     rule.pattern = QRegExp("\".*\"");
     rule.format = quotationFormat;
     highlightingRules.append(rule);
 
-    // Function format
+
     functionFormat.setFontItalic(true);
     rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
     rule.format = functionFormat;

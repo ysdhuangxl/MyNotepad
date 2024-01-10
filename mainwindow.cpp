@@ -10,6 +10,11 @@
 #include "searchdialog.h"
 #include "ui_mainwindow.h"
 
+#include <QSettings>
+#include <QAction>
+
+
+
 using namespace Qt;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -21,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     connect(ui->textEdit, &CodeEditor::linkActivated, this, &MainWindow::openBrowser);
+
+    connect(ui->actionHistory, &QAction::triggered, this, &MainWindow::on_actionHistory_triggered);
 
     filePath = "";
 
@@ -51,6 +58,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->actionShowToolBar->setChecked(true);
 
     on_actionShowLineNumber_triggered(false);
+
+    QSettings settings;
+    recentFiles = settings.value("recentFiles").toStringList();
+    updateRecentFilesMenu();
 }
 
 MainWindow::~MainWindow()
@@ -104,7 +115,7 @@ void MainWindow::on_actionOpen_triggered()
 }
 
 
-// 新的函数，用于在新窗口中打开文件
+
 void MainWindow::openFile(const QString &filename)
 {
     QFile file(filename);
@@ -115,12 +126,12 @@ void MainWindow::openFile(const QString &filename)
     }
 
     if (filePath.isEmpty()) {
-        // 如果是第一次打开文件，则在当前窗口显示
+
         filePath = filename;
         ui->textEdit->clear();
         this->setWindowTitle(QFileInfo(filename).absolutePath());
     } else {
-        // 如果不是第一次打开文件，则在新窗口中显示
+
         MainWindow *newWindow = new MainWindow;
         newWindow->show();
         newWindow->openFile(filename);
@@ -133,6 +144,8 @@ void MainWindow::openFile(const QString &filename)
     file.close();
 
     textChanged = false;
+
+    addToRecentFiles(filename);  // 添加文件到历史记录
 }
 
 
@@ -215,6 +228,63 @@ bool MainWindow::userEditConfirmed()
     }
     return true;
 }
+
+void MainWindow::updateRecentFilesMenu()
+{
+
+    ui->menu_F->clear();
+
+    if (!recentFiles.isEmpty()) {
+        for (int i = 0; i < qMin(recentFiles.size(), maxRecentFiles); ++i) {
+            QAction *action = new QAction(this);
+            action->setText(tr("&%1 %2").arg(i + 1).arg(recentFiles.at(i)));
+            connect(action, &QAction::triggered, [this, i]() {
+                openRecentFile(recentFiles.at(i));
+            });
+            ui->menu_F->addAction(action);
+        }
+        ui->menu_F->setEnabled(true);
+    } else {
+        ui->menu_F->setEnabled(false);
+    }
+
+    qDebug() << "Recent files: " << recentFiles;
+
+}
+
+
+void MainWindow::addToRecentFiles(const QString &fileName)
+{
+
+    recentFiles.removeAll(fileName);
+    recentFiles.prepend(fileName);
+
+
+    while (recentFiles.size() > maxRecentFiles) {
+        recentFiles.removeLast();
+    }
+
+    updateRecentFilesMenu();
+
+    QSettings settings;
+    settings.setValue("recentFiles", recentFiles);
+
+    qDebug() << "Adding to recent files: " << fileName;
+
+}
+
+void MainWindow::openRecentFile(const QString &fileName)
+{
+
+    if (!userEditConfirmed())
+        return;
+
+    openFile(fileName);
+
+    qDebug() << "Opening recent file: " << fileName;
+
+}
+
 
 void MainWindow::on_textEdit_textChanged()
 {
@@ -380,3 +450,30 @@ void MainWindow::openBrowser(const QUrl &url)
 {
     QDesktopServices::openUrl(url);
 }
+
+void MainWindow::on_actionHistory_triggered()
+{
+    if (userEditConfirmed()) {
+        if (!recentFiles.isEmpty()) {
+
+            QFileDialog fileDialog(this, "Open Recent File", "", "Text files (*.txt);;All files (*.*)");
+            fileDialog.setFileMode(QFileDialog::ExistingFile);
+            fileDialog.setNameFilter("Text files (*.txt);;All files (*.*)");
+            fileDialog.setViewMode(QFileDialog::Detail);
+
+            int result = fileDialog.exec();
+
+            if (result == QDialog::Accepted) {
+                QString selectedFile = fileDialog.selectedFiles().first();
+
+                openRecentFile(selectedFile);
+            }
+        } else {
+            QMessageBox::information(this, "Recent History", "No recent history available.");
+        }
+    }
+}
+
+
+
+

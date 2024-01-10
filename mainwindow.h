@@ -77,6 +77,8 @@ private slots:
 
     void openBrowser(const QUrl &url);
 
+    void on_actionHistory_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -88,5 +90,11 @@ private:
     void openFile(const QString &filename);
 
     bool userEditConfirmed();
+
+    QStringList recentFiles;
+    int maxRecentFiles = 5;
+    void updateRecentFilesMenu();
+    void addToRecentFiles(const QString &fileName);
+    void openRecentFile(const QString &fileName);
 };
 #endif // MAINWINDOW_H

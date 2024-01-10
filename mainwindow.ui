@@ -52,6 +52,7 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="actionHistory"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -119,6 +120,7 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="actionSaveAs"/>
+   <addaction name="actionHistory"/>
    <addaction name="separator"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
@@ -422,6 +424,24 @@
    </property>
    <property name="toolTip">
     <string>设置字体背景色</string>
+   </property>
+  </action>
+  <action name="actionHistory">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="notepad.qrc">
+     <normaloff>:/img/history.png</normaloff>:/img/history.png</iconset>
+   </property>
+   <property name="text">
+    <string>最近历史</string>
+   </property>
+   <property name="toolTip">
+    <string>最近历史</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
  </widget>
